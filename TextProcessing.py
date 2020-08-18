@@ -61,25 +61,3 @@ def calc_tf_idf(corpus):
         tfidf[key] = np.multiply(tf,idf)
     
     return tfidf
-    
-def calc_cosine_similarity(tfidf, norm=True):
-    """
-        Given a dictionary of tfidf vectors, construct a diffusion matrix using
-        cosine similarity. The order will follow the items() order of the
-        input.
-
-    """
-    V = list(tfidf.values())
-    cosine_similarity = lambda a,b: np.dot(a,b)/np.sqrt(np.dot(a,a)*np.dot(b,b))
-    n_documents = len(tfidf)
-    D = np.zeros([n_documents,n_documents])+-np.Inf
-    for i in range(n_documents):
-        for j in range(i,n_documents):
-            D[i,j] = cosine_similarity(V[i],V[j])
-    
-    # Symmetrize the matrix and norm if desired
-    D = np.maximum(D,D.transpose())
-    if norm:
-        Dnorm = np.repeat(np.matrix(np.sum(D,axis=0)),np.size(D,0),axis=0)
-        D = np.multiply(D, 1./Dnorm)
-    return D
